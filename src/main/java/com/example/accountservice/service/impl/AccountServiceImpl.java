@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.example.accountservice.ustils.AccountUtils.checkActive;
 
 @Service
 @Slf4j
@@ -22,15 +21,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Cacheable(cacheNames = "amount")
     public synchronized Long getAmount(Integer id) {
-        log.info("find amount {}", id);
+        log.info("getAmount {}", id);
         Optional<Account> account = repository.findById(id);
-        if (account.isPresent()) {
-            if (checkActive(account)) {
-                return account.get().getAmount();
-            } else {
-                account.get().setActive(true);
-            }
-            repository.save(account.get());
+
+        if (account.isEmpty()) {
+            repository.save(new Account(id, 0L));
+        } else {
+            return account.get().getAmount();
         }
         return 0L;
     }
@@ -38,14 +35,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @CachePut(cacheNames = "amount", key = "#id")
     public synchronized void addAmount(Integer id, Long amount) {
-        log.info("add amount to id = " + id + ", amount = " + amount);
+        log.info("addAmount id: {}, amount: {}", id, amount);
         Optional<Account> account = repository.findById(id);
-        if (checkActive(account)) {
-            account.ifPresent(account1 -> account1.setAmount(account1.getAmount() + amount));
+
+        if (account.isPresent()) {
+            account.get().setAmount(account.get().getAmount() + amount);
+            repository.save(account.get());
         } else {
-            account.ifPresent(account1 -> account1.setActive(true));
-            account.ifPresent(account1 -> account1.setAmount(account1.getAmount() + amount));
+            repository.save(new Account(id, amount));
         }
-        repository.save(account.get());
     }
 }
