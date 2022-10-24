@@ -1,15 +1,16 @@
 package com.example.accountservice.statistic;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 /**
  * Статистика отрабатывает верно, падение количества запросов на получение связано с кэшированием
  * На малое количество потоков статистика получения в секунду показывает 0 - это связано с тем, что запросы
  * проходят быстрее, чем за секунду. Если отобразить totalStatistic, то все будет верно
  */
 @Service
-@Slf4j
+@Log4j2
 public class StatisticManager {
 
     private static Integer perSecondsGetRequest = 0;
@@ -28,9 +29,10 @@ public class StatisticManager {
         totalGetRequest++;
     }
 
-    public static void resetStatistic() {
+    public static void dropStatistic() {
         totalGetRequest = 0;
         totalAddRequest = 0;
+        log.info("Drop statistic");
     }
 
     @Scheduled(fixedDelay = 1000)
@@ -41,6 +43,7 @@ public class StatisticManager {
 
     public static void getTotalStatistic() {
         String def = "-";
+        log.info("Total statistic");
         log.info("\n" + def.repeat(30) + "\n" +
                         "-total add request: {} \n" +
                         "-total get request: {} \n" +
@@ -53,9 +56,9 @@ public class StatisticManager {
     public static void getStatisticPerSeconds() {
         String def = "-";
         log.info("\n" + def.repeat(30) + "\n" +
-                "-add request: {} perSeconds \n" +
-                "-get request: {} perSeconds \n" +
-                def.repeat(30),
+                        "-add request: {} perSeconds \n" +
+                        "-get request: {} perSeconds \n" +
+                        def.repeat(30),
                 perSecondsAddRequest,
                 perSecondsGetRequest);
     }

@@ -1,5 +1,6 @@
 package com.example.accountservice.client;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -7,14 +8,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-
 @Component
+@Log4j2
 public class TestClient {
-    private final Integer rCount;
-    private final Integer wCount;
     protected final Integer fromList;
     protected final Integer toList;
+    private final Integer rCount;
+    private final Integer wCount;
     ExecutorService executorService;
     RestTemplate restTemplate = new RestTemplate();
 
@@ -29,6 +29,7 @@ public class TestClient {
     }
 
     public void startHighLoadTest() {
+        log.info("Start high load test");
         executorService = Executors.newFixedThreadPool(rCount + wCount);
         for (int i = 0; i < rCount; i++) {
             executorService.submit(new GetClient(restTemplate, fromList, toList));

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * После выполнение getAmount для всех заданных id, запросы в секунду падают до нуля.
  * Это обусловлено тем, что все значения добавляют в кэш и достаются оттуда
- * */
+ */
 @RestController
 @RequestMapping("/account/test")
-@Tag(name="TestStatisticController")
+@Tag(name = "TestStatisticController")
 public class TestStatisticController {
     private final TestClient testClient;
 
@@ -32,7 +32,7 @@ public class TestStatisticController {
     @GetMapping("/dropStatistic")
     @Operation(summary = "dropStatistic")
     public void dropStatistic() {
-        StatisticManager.resetStatistic();
+        StatisticManager.dropStatistic();
     }
 
     @GetMapping("/totalStatistic")
