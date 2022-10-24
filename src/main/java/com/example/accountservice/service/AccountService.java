@@ -1,21 +1,16 @@
 package com.example.accountservice.service;
 
-import org.springframework.stereotype.Service;
-
 
 public interface AccountService {
-    /**
-     * Retrieves current balance or zero if addAmount() method was not called before for specified id
-     *
-     * @param id balance identifier
-     */
+
     Long getAmount(Integer id);
 
     /**
-     * Increases balance or set if addAmount() method was called first time
+     * Мной было принято решение поменять возвращаемое значение в связи с тем, что я использую кэширование Spring,
+     * которое может обновлять значение в кэше (CachePut), используя возвращаемое значение, а в случае возвращения void, оно оставляет
+     * в параметре null
      *
-     * @param id balance identifier
-     * @param value positive or negative value, which must be added to current balance
+     * Решения без изменения возвращаемого значения не нашел
      */
-    void addAmount(Integer id, Long value);
+    Long addAmount(Integer id, Long value);
 }

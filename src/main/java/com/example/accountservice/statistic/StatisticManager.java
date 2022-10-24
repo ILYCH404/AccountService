@@ -5,6 +5,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 /**
  * Статистика отрабатывает верно, падение количества запросов на получение связано с кэшированием
+ * На малое количество потоков статистика получения в секунду показывает 0 - это связано с тем, что запросы
+ * проходят быстрее, чем за секунду. Если отобразить totalStatistic, то все будет верно
  */
 @Service
 @Slf4j
@@ -27,10 +29,14 @@ public class StatisticManager {
     }
 
     public static void resetStatistic() {
-        perSecondsGetRequest = 0;
-        perSecondsAddRequest = 0;
         totalGetRequest = 0;
         totalAddRequest = 0;
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public static void perSecondsStatistic() {
+        perSecondsAddRequest = 0;
+        perSecondsGetRequest = 0;
     }
 
     public static void getTotalStatistic() {
@@ -43,13 +49,7 @@ public class StatisticManager {
                 totalGetRequest);
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public static void startStatistic() {
-        perSecondsAddRequest = 0;
-        perSecondsGetRequest = 0;
-    }
-
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 4000)
     public static void getStatisticPerSeconds() {
         String def = "-";
         log.info("\n" + def.repeat(30) + "\n" +
