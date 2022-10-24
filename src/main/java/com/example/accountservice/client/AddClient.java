@@ -1,28 +1,28 @@
 package com.example.accountservice.client;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AddClient implements Runnable {
-    private final List<Integer> idList;
     private final RestTemplate restTemplate;
-    private Integer id;
+    private final AtomicInteger id;
+    private final Integer from;
+    private final Integer to;
 
-    public AddClient(List<Integer> idList, RestTemplate restTemplate) {
-        this.idList = idList;
+    public AddClient(RestTemplate restTemplate, Integer from, Integer to) {
         this.restTemplate = restTemplate;
-        id = 0;
+        id = new AtomicInteger(from);
+        this.from = from;
+        this.to = to;
     }
 
     @Override
     public void run() {
         while (true) {
-            restTemplate.postForLocation(String.format("http://localhost:8080/account/addAmount/%d/%d", idList.get(id), 5), Long.class);
-            id++;
-            if (id == idList.size()) {
-                id = 0;
+            restTemplate.postForLocation(String.format("http://localhost:8080/account/addAmount/%d/%d", id.getAndIncrement(), 5), Long.class);
+            if (id.get() > to) {
+                id.set(from);
             }
         }
     }
