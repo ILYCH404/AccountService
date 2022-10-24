@@ -5,7 +5,7 @@ AccountService
 -------------------------------------------------------------
 
 #### Stack
-JDK 17, Spring Boot 2.7.5, Lombok, PostgreSQL, Swagger/OpenAPI 3.0, Spring Data JPA
+JDK 17, Spring Boot 2.7.5, Lombok, PostgreSQL, Swagger/OpenAPI, Spring Data JPA
 
 ----------------------------------------------------
 
