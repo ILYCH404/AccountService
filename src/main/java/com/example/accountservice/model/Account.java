@@ -8,14 +8,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "accounts")
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor()
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "amount")
