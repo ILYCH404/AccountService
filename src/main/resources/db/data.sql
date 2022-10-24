@@ -1,3 +1,3 @@
-DELETE FROM users;
-DROP TABLE users;
+DELETE FROM accounts;
+DROP TABLE accounts;
 
